@@ -2,9 +2,9 @@
 
 
 struct Node {
-    int value;
+    long long value;
     Node* next;
-    Node(int val) {
+    Node(long long val) {
         value = val;
         next = nullptr;
     }
@@ -25,24 +25,24 @@ class Stack {
             }
         }
 
-        void push(int value) {
+        void push(long long value) {
             Node* new_node = new Node(value);
             new_node -> next = top;
             top = new_node;
         }
 
-        int pop() {
+        long long pop() {
             if (is_empty()) {
                 return -1;
             }
             Node* temp = top;
-            int value = top -> value;
+            long long value = top -> value;
             top = top -> next;
             delete temp;
             return value;
         }
 
-        int peek() {
+        long long peek() {
             if (is_empty()) {
                 return -1;
             }
@@ -59,8 +59,8 @@ int main() {
     int N;
     std::cin >> N;
     long long* heights = new long long[N];
-    int* left = new int[N];
-    int* right = new int[N];
+    long long* left = new long long[N];
+    long long* right = new long long[N];
 
     for (int i = 0; i < N; i++) {
         std::cin >> heights[i];
@@ -102,7 +102,7 @@ int main() {
 
     long long max_area = 0;
     for (int i = 0; i < N; i++) {
-        int width = right[i] - left[i] - 1;
+        long long width = right[i] - left[i] - 1;
         long long area = width * heights[i];
         if (max_area < area) {
             max_area = area;
