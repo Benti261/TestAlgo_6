@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <fstream>
+#include <unistd.h>
 
 struct TestCase {
     std::string name;
@@ -8,7 +10,25 @@ struct TestCase {
     std::string expected;
 };
 
-const int NUM_TESTS = 15;
+std::string generateNumbers(int n, long long value) {
+    if (n <= 0) return "";
+    
+    std::string result = std::to_string(value);
+    std::string value_str = " " + std::to_string(value);
+    
+    result.reserve(n * (value_str.length() + 1));
+    
+    for (int i = 1; i < n; i++) {
+        result += value_str;
+    }
+    return result;
+}
+
+std::string generateOnesWithSpaces(int n) {
+    return generateNumbers(n, 1);
+}
+
+const int NUM_TESTS = 17;  
 TestCase tests[NUM_TESTS] = {
     {"Test1", "5\n1 2 3 4 5", "9"},
     {"Test2", "5\n5 4 3 2 1", "9"},
@@ -24,12 +44,18 @@ TestCase tests[NUM_TESTS] = {
     {"Test12", "5\n100 4 3 2 1", "100"},
     {"Test13", "7\n1 2 3 4 3 2 1", "10"},
     {"Test14", "9\n1 2 3 4 4 4 3 2 1", "15"},
-    {"Test15", "10\n1 3 2 5 4 3 6 2 1 4", "14"}
+    {"Test15", "10\n1 3 2 5 4 3 6 2 1 4", "14"},
+    {"Test16", "1000000\n" + generateNumbers(1000000, 1), "1000000"},
+    {"Test17", "1000000\n" + generateNumbers(1000000, 1000000000), "1000000000000000"} 
 };
 
 std::string runProgram(const std::string& input) {
-    std::string command = "echo \"" + input + "\" | ./main";
+    std::string filename = "test_input.txt";
+    std::ofstream file(filename);
+    file << input;
+    file.close();
 
+    std::string command = "./main < " + filename;
     FILE* pipe = popen(command.c_str(), "r");
     if (!pipe) return "ERROR";
 
@@ -39,6 +65,7 @@ std::string runProgram(const std::string& input) {
         result += buffer;
     }
     pclose(pipe);
+    remove(filename.c_str());
 
     result.erase(result.find_last_not_of(" \n\r\t") + 1);
     return result;
@@ -59,7 +86,7 @@ int main() {
             passed++;
         } else {
             std::cout << "✗ FAILED\n";
-            std::cout << "  Input: " << test.input << "\n";
+            std::cout << "  Input: " << (test.input.length() > 100 ? test.input.substr(0, 100) + "..." : test.input) << "\n";
             std::cout << "  Expected: " << test.expected << "\n";
             std::cout << "  Got: " << output << "\n\n";
         }
