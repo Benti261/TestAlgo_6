@@ -8,7 +8,17 @@ struct TestCase {
     std::string expected;
 };
 
-const int NUM_TESTS = 15;
+std::string generateOnesWithSpaces(int n) {
+    std::string result = "1";
+    if (n <= 0) return "";
+
+    for (int i = 1; i < n; i++) {
+        result += " 1";
+    }
+    return result;
+}
+
+const int NUM_TESTS = 16;
 TestCase tests[NUM_TESTS] = {
     {"Test1", "5\n1 2 3 4 5", "9"},
     {"Test2", "5\n5 4 3 2 1", "9"},
@@ -24,7 +34,8 @@ TestCase tests[NUM_TESTS] = {
     {"Test12", "5\n100 4 3 2 1", "100"},
     {"Test13", "7\n1 2 3 4 3 2 1", "10"},
     {"Test14", "9\n1 2 3 4 4 4 3 2 1", "15"},
-    {"Test15", "10\n1 3 2 5 4 3 6 2 1 4", "14"}
+    {"Test15", "10\n1 3 2 5 4 3 6 2 1 4", "14"},
+    { "Test16", "100000\n" + generateOnesWithSpaces(100000), "100000"}
 };
 
 std::string runProgram(const std::string& input) {
